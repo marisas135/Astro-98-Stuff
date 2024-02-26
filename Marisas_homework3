@@ -1,0 +1,114 @@
+#1) Power of a Number
+def power(x,y):
+    answer1 = pow(x,y)
+    return answer1
+
+print(power(2,3))
+
+#2) Minimum and Maximum
+def maxmin(numlist):
+    minnum = numlist[0]
+    for i in range(len(numlist)):
+        if numlist[i]<= minnum:
+            minnum = numlist[i]
+    maxnum = numlist[0]
+    for i in range(len(numlist)):
+        if numlist[i] >= maxnum:
+            maxnum = numlist[i]
+    return (minnum,maxnum)
+numlist=(0,1,2,3,4,5)
+print(maxmin(numlist))
+
+#3) Check Leap Year
+def leapyr(year):
+    if (year % 4 == 0 and year % 100 != 0) or (year % 400 == 0):
+        print("True")
+    else: 
+        print ("False")
+leapyr(2000)
+leapyr(2016)
+leapyr(1900)
+
+#4) BMI
+def bmicalc(weight, height):
+    bmi = (weight / (height ** 2))
+    return bmi
+print (bmicalc(100, 1.5))
+
+#5) Rotating Digits
+def rotatedig(n):
+    lastdig = (n % 10)
+    minuslast = (n // 10)
+    def countdigs(n):
+        count = 0
+        while (n):
+            count = count + 1
+            n = n // 10 
+        return count
+    totaldigs = countdigs(n)
+    finaldig = (lastdig * (10 ** (totaldigs-1)) + minuslast)
+    return finaldig
+print (rotatedig(12345))
+
+#6) Minimum and Maximum but with Loops
+#min with for loop
+def minfor(numlist):
+    minnum = numlist[0]
+    for i in range(len(numlist)):
+        if numlist[i]<= minnum:
+            minnum = numlist[i]
+    return minnum
+
+#max with for loop
+def maxfor (numlist):
+    maxnum = numlist[0]
+    for i in range(len(numlist)):
+        if numlist[i] >= maxnum:
+            maxnum = numlist[i]
+    return maxnum
+    
+#min with while loop
+def minwhile (numlist):
+    minnum2 = numlist[0]
+    i = 0
+    while (i<len(numlist)):
+        if numlist[i] < minnum2:
+            minnum2 = numlist[i]
+        i += 1
+    return minnum2
+    
+def maxwhile (numlist):
+    maxnum2 = numlist[0]
+    j = 0
+    while (j<len(numlist)):
+        if numlist[j] > maxnum2:
+            maxnum2 = numlist[j]
+        j += 1
+    return maxnum2
+    
+numlist = (0,1,2,3,4,5)
+print (maxfor(numlist))
+print (minfor(numlist))
+print (maxwhile(numlist))
+print (minwhile(numlist))
+
+#7) Vowels
+def countvowels(str):
+    numvowels = 0
+    vowels = "aeiouAEIOU"
+    for i in str:
+        if i in vowels:
+            numvowels += 1
+    return numvowels
+
+print(countvowels("UC Berkeley"))
+
+#8) Digital Root
+def digroot(int):
+    count = 0 
+    while int:
+        count += (int % 10)
+        int = int // 10 
+    return count
+print (digroot(12345))
+
