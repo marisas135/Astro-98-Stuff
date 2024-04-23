@@ -1,0 +1,86 @@
+
+import csv
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.optimize import curve_fit
+
+# Define Kepler's Third Law equation with both planet and host star mass
+def keplers_third_law(period, k, m_planet, m_star):
+    period_squared = period ** 2
+    m_total = m_planet + m_star
+    semi_major_axis = np.sqrt(abs((k * period_squared) / (4 * np.pi ** 2 * m_total)))
+    return semi_major_axis
+
+file_path = "/Users/marisas/Desktop/exoplanet_data.csv"
+
+orbital_periods = []
+semi_major_axes = []
+planet_masses = []
+star_masses = []
+
+# Read data from the CSV file
+with open(file_path, 'r') as file:
+    reader = csv.DictReader(file)
+    for row in reader:
+        if row['pl_orbper'] and row['pl_orbsmax'] and row['pl_bmassj'] and row['st_mass']:
+            period=float(row['pl_orbper'])
+            if period <= 100: 
+                orbital_periods.append(period)
+                semi_major_axes.append(float(row['pl_orbsmax']))
+                planet_masses.append(float(row['pl_bmassj'])) 
+                star_masses.append(float(row['st_mass']))
+
+np.random.seed(0)
+num_data_points = 100
+orbital_periods_rand = np.random.uniform(0.1, 50, num_data_points) 
+planet_masses_rand = np.random.uniform(0.1, 10, num_data_points) 
+star_masses_rand = np.random.uniform(0.5, 3, num_data_points) 
+k = 0.01720209895
+semi_major_axes_rand = keplers_third_law(orbital_periods_rand, k, planet_masses_rand, star_masses_rand)
+popt, pcov = curve_fit(keplers_third_law, orbital_periods_rand, semi_major_axes_rand, p0=[1, 1, 1])
+period_range_rand = np.linspace(min(orbital_periods_rand), max(orbital_periods_rand), 100)
+semi_major_axes_fit_rand = keplers_third_law(period_range_rand, *popt)
+
+plt.scatter(orbital_periods_rand, semi_major_axes_rand, label='Random Data', s=3)
+plt.plot(period_range_rand, semi_major_axes_fit_rand, color='red', label='Fitted Curve (Kepler\'s Third Law)')
+plt.xlabel('Orbital Period (years)')
+plt.ylabel('Semi-major Axis (AU)')
+plt.title('Fitting Kepler\'s Third Law to Random Data')
+plt.legend()
+plt.grid(True)
+plt.show()
+
+
+popt, pcov = curve_fit(keplers_third_law, orbital_periods, semi_major_axes, p0=[1, 1, 1])
+period_range = np.linspace(min(orbital_periods), max(orbital_periods), 100)
+log_period_range = np.logspace(np.log10(min(orbital_periods)), np.log10(max(orbital_periods)), 100)
+semi_major_axes_fit = keplers_third_law(period_range, *popt)
+log_semi_major_axes_fit = keplers_third_law(log_period_range, *popt)
+
+plt.scatter(orbital_periods, semi_major_axes, label='Original Data', color = 'orange', s=1)
+plt.plot(period_range, semi_major_axes_fit, color='red', lw = 2, label='Fitted Curve (Kepler\'s)', )
+plt.xlabel('Orbital Period (years)')
+plt.ylabel('Semi-major Axis (AU)')
+plt.title('Orbital period vs. Semi Major Axis - Fitted')
+plt.legend()
+plt.grid(True)
+plt.xlim(0,100)
+plt.ylim(0,0.5)
+plt.grid(True)
+plt.savefig('/Users/marisas/Desktop/exoplanet_graph_fitted')
+plt.show()
+
+residuals = np.array(semi_major_axes) - keplers_third_law(np.array(orbital_periods), *popt)
+mean_residual = np.mean(residuals)
+median_residual = np.median(residuals)
+std_residual = np.std(residuals)
+max_residual = np.max(residuals)
+min_residual = np.min(residuals)
+
+print("Mean residual:", mean_residual)
+print("Median residual:", median_residual)
+print("Standard deviation of residuals:", std_residual)
+print("Maximum residual:", max_residual)
+print("Minimum residual:", min_residual)
+
+
